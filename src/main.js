@@ -136,29 +136,40 @@
         });
 
         $('.mail-to-schedule-popup-add-button').on('click', () => {
-          garoon.api('/api/v1/schedule/events', 'POST', {
-            eventType: 'REGULAR',
-            subject: $('#mail-to-schedule-popup-schedule-title').val(),
-            notes: '',
-            attendees: [
-              {
-                id: garoon.base.user.getLoginUser().garoonId,
-                type: 'USER',
+          garoon.api(
+            '/api/v1/schedule/events',
+            'POST',
+            {
+              eventType: 'REGULAR',
+              subject: $('#mail-to-schedule-popup-schedule-title').val(),
+              notes: '',
+              attendees: [
+                {
+                  id: garoon.base.user.getLoginUser().garoonId,
+                  type: 'USER',
+                },
+              ],
+              start: {
+                dateTime: `2019-${String(month).padStart(2, '0')}-${String(
+                  date
+                ).padStart(2, '0')}T08:00:00+09:00`,
+                timeZone: 'Asia/Tokyo',
               },
-            ],
-            start: {
-              dateTime: `2019-${String(month).padStart(2, '0')}-${String(
-                date
-              ).padStart(2, '0')}T08:00:00+09:00`,
-              timeZone: 'Asia/Tokyo',
+              end: {
+                dateTime: `2019-${String(month).padStart(2, '0')}-${String(
+                  date
+                ).padStart(2, '0')}T18:00:00+09:00`,
+                timeZone: 'Asia/Tokyo',
+              },
             },
-            end: {
-              dateTime: `2019-${String(month).padStart(2, '0')}-${String(
-                date
-              ).padStart(2, '0')}T18:00:00+09:00`,
-              timeZone: 'Asia/Tokyo',
-            },
-          });
+            response => {
+              $popup.remove();
+              window.open(
+                `/g/schedule/view.csp?event=${response.data.id}`,
+                '_blank'
+              );
+            }
+          );
         });
       });
     }
