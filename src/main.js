@@ -207,7 +207,7 @@ const getPopupHTML = mail_info => {
               <div class="mail-to-schedule-popup-row">
                   <span class="mail-to-schedule-popup-row-title">メモ</span>
                   <div class="mail-to-schedule-popup-row-content">
-                      <textarea></textarea>
+                      <textarea id="mail-to-schedule-popup-schedule-note"></textarea>
                   </div>
               </div>
               <div class="mail-to-schedule-popup-row">

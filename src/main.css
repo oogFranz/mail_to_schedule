@@ -66,3 +66,13 @@
 .mail-to-schedule-popup-row-content {
     flex: 1;
 }
+
+#mail-to-schedule-popup-schedule-title {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+#mail-to-schedule-popup-schedule-note {
+    box-sizing: border-box;
+    width: 100%;
+}
