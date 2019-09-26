@@ -128,7 +128,7 @@
                 </section>
             </div>`
         );
-        $('.mail-to-schedule').append($popup);
+        $(el.target).append($popup);
         $('#mail-to-schedule-popup-schedule-title').val(mail_content_title);
 
         $('.mail-to-schedule-popup-close-button').on('click', () => {
