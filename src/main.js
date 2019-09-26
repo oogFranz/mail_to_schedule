@@ -122,7 +122,7 @@
                     <div class="mail-to-schedule-popup-row">
                         <span class="mail-to-schedule-popup-row-title"></span>
                         <div class="mail-to-schedule-popup-row-content">
-                            <button class="button_main_sub_grn_kit">登録する</button>
+                            <button class="mail-to-schedule-popup-add-button button_main_sub_grn_kit">登録する</button>
                         </div>
                     </div>
                 </section>
@@ -133,6 +133,32 @@
 
         $('.mail-to-schedule-popup-close-button').on('click', () => {
           $popup.remove();
+        });
+
+        $('.mail-to-schedule-popup-add-button').on('click', () => {
+          garoon.api('/api/v1/schedule/events', 'POST', {
+            eventType: 'REGULAR',
+            subject: $('#mail-to-schedule-popup-schedule-title').val(),
+            notes: '',
+            attendees: [
+              {
+                id: garoon.base.user.getLoginUser().garoonId,
+                type: 'USER',
+              },
+            ],
+            start: {
+              dateTime: `2019-${String(month).padStart(2, '0')}-${String(
+                date
+              ).padStart(2, '0')}T08:00:00+09:00`,
+              timeZone: 'Asia/Tokyo',
+            },
+            end: {
+              dateTime: `2019-${String(month).padStart(2, '0')}-${String(
+                date
+              ).padStart(2, '0')}T18:00:00+09:00`,
+              timeZone: 'Asia/Tokyo',
+            },
+          });
         });
       });
     }
