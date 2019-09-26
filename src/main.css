@@ -22,6 +22,12 @@
     font-size: inherit;
 }
 
+.mail-to-schedule-button:hover {
+    background-color: inherit;
+    border: inherit;
+    cursor: pointer;
+}
+
 .mail-to-schedule {
     position: relative;
     display: inline-block;
