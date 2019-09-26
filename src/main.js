@@ -9,11 +9,14 @@
       $mail_content.html(
         mail_content_html.replace(
           regex,
-          '<a href="/g/schedule/add.csp?bdate=2019-$2-$3">$1</a>'
+          '<div class="mail-to-schedule"><button class="mail-to-schedule-button">$1</button></div>'
         )
       );
     }
   };
   let observer = new MutationObserver(callback);
-  observer.observe($('#mail_view')[0], { childList: true });
+  const $mail_view = $('#mail_view');
+  if ($mail_view.length > 0) {
+    observer.observe($mail_view[0], { childList: true });
+  }
 })();
