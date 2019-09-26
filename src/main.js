@@ -7,6 +7,9 @@ const executeWhenMailOpened = callback => {
 };
 
 const deployScheduleAddButton = () => {
+  if ($('.mail-to-schedule-popup').length > 0) {
+    $('.mail-to-schedule-popup').remove();
+  }
   let $mail_content = $('#mail_view .format_contents');
   const mail_content_html = $mail_content.html();
   if (mail_content_html) {
@@ -19,9 +22,6 @@ const deployScheduleAddButton = () => {
     );
 
     $('.mail-to-schedule-button').on('click', el => {
-      if ($('.mail-to-schedule .mail-to-schedule-popup').length > 0) {
-        return;
-      }
       const mail_info = getMailInfo(el.target);
       openPopup(el.target, mail_info);
     });
@@ -54,9 +54,19 @@ const getMailInfo = dateButton => {
 };
 
 const openPopup = (dateButton, mail_info) => {
-  const $popup = $(getPopupHTML(mail_info));
+  if ($('.mail-to-schedule-popup').length > 0) {
+    $('.mail-to-schedule-popup').remove();
+  }
 
-  $(dateButton).append($popup);
+  const $popup = $(getPopupHTML(mail_info));
+  const rect = dateButton.getBoundingClientRect();
+  $popup.css({
+    top: rect.bottom + 10,
+    left: rect.left,
+  });
+
+  $(document.body).append($popup);
+
   $('#mail-to-schedule-popup-schedule-title').val(mail_info.title);
   $('.mail-to-schedule-popup-close-button').on('click', () => {
     closePopup($popup);
