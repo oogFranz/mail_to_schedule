@@ -19,21 +19,18 @@
 .mail-to-schedule-popup-row {
     display: flex;
     align-items: center;
+    padding: 6px;
 }
 
 .mail-to-schedule-popup-row-title {
-    font-size: 13px;
     width: 60px;
 }
 
 .mail-to-schedule-popup-row-content {
-    font-size: 13px;
     flex: 1;
 }
 
 .mail-to-schedule-popup-header {
-    font-size: 13px;
-    font-weight: 700;
     padding: 0;
     margin: 0;
     text-align: center;
