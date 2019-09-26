@@ -11,6 +11,9 @@
         )
       );
 
+      const $mail_content_title = $('.mail_content_title_text_grn');
+      const mail_content_title = $mail_content_title.text().trim();
+
       $('.mail-to-schedule-button').on('click', el => {
         if ($('.mail-to-schedule .mail-to-schedule-popup').length > 0) {
           return;
@@ -107,7 +110,7 @@
                     <div class="mail-to-schedule-popup-row">
                         <span class="mail-to-schedule-popup-row-title">タイトル</span>
                         <div class="mail-to-schedule-popup-row-content">
-                            <input type="text"/>
+                            <input id="mail-to-schedule-popup-schedule-title" type="text"/>
                         </div>
                     </div>
                     <div class="mail-to-schedule-popup-row">
@@ -126,6 +129,7 @@
             </div>`
         );
         $('.mail-to-schedule').append($popup);
+        $('#mail-to-schedule-popup-schedule-title').val(mail_content_title);
 
         $('.mail-to-schedule-popup-close-button').on('click', () => {
           $popup.remove();
