@@ -5,7 +5,8 @@
         let $mail_content = $("#mail_view .format_contents");
         let mail_content_html = $mail_content.html();
         if (mail_content_html){
-            $mail_content.html(mail_content_html.replace(/(\d+月\d+日[(（].?[)）])/g, '<a href="">$1</a>'));
+            let regex = /((\d+)月(\d+)日[(（].?[)）])/g;
+            $mail_content.html(mail_content_html.replace(regex, '<a href="/g/schedule/add.csp?bdate=2019-$2-$3">$1</a>'));
         }  
       };
     let observer = new MutationObserver(callback);
