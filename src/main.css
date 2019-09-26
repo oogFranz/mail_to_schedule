@@ -12,8 +12,19 @@
     width: 450px;
 }
 
+.mail-to-schedule-button {
+    border: none;
+    background-color: inherit;
+    color: #0a62ad;
+    padding: 0;
+    height: inherit;
+    line-height: inherit;
+    font-size: inherit;
+}
+
 .mail-to-schedule {
     position: relative;
+    display: inline-block;
 }
 
 .mail-to-schedule-popup-header {
