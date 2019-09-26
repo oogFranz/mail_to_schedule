@@ -11,15 +11,20 @@
         )
       );
 
-      $('.mail-to-schedule-button').on('click', () => {
+      $('.mail-to-schedule-button').on('click', el => {
         if ($('.mail-to-schedule .mail-to-schedule-popup').length > 0) {
           return;
         }
 
+        const dateRegex = /(\d+)月(\d+)日/;
+        const matches = el.target.innerText.match(dateRegex);
+        const month = matches[1];
+        const date = matches[2];
+
         const $popup = $(
           `<div class="mail-to-schedule-popup fontsize_sub_grn_kit">
             <div class="mail-to-schedule-popup-header">
-                <h3 class="mail-to-schedule-popup-header-title fontsize_sub_grn_kit">2019年09月26日</h3>
+                <h3 class="mail-to-schedule-popup-header-title fontsize_sub_grn_kit">2019年${month}月${date}日</h3>
                 <button class="mail-to-schedule-popup-close-button icon_close_2_mm_grn_kit icon_inline_mm_grn icon_only_mm_grn"/>
             </div>
                 <section>
