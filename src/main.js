@@ -3,7 +3,7 @@
     let $mail_content = $('#mail_view .format_contents');
     let mail_content_html = $mail_content.html();
     if (mail_content_html) {
-      const regex = /((\d+)月(\d+)日[(（].?[)）])/g;
+      const regex = /((\d+)月(\d+)日[(（].?[)）]((\d+):(\d+).(\d+):(\d+))?)/g;
       $mail_content.html(
         mail_content_html.replace(
           regex,
