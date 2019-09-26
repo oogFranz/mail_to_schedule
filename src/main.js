@@ -33,7 +33,9 @@
                 <section>
                     <div class="mail-to-schedule-popup-row">
                         <span class="mail-to-schedule-popup-row-title">参加者</span>
-                        <span class="mail-to-schedule-popup-row-content">ユーザー1</span>
+                        <span class="mail-to-schedule-popup-row-content">${
+                          garoon.base.user.getLoginUser().name
+                        }</span>
                     </div>
                     <div class="mail-to-schedule-popup-row">
                         <span class="mail-to-schedule-popup-row-title">時刻</span>
