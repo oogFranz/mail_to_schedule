@@ -12,6 +12,10 @@
       );
 
       $('.mail-to-schedule-button').on('click', () => {
+        if ($('.mail-to-schedule .mail-to-schedule-popup').length > 0) {
+          return;
+        }
+
         const $popup = $(
           `<div class="mail-to-schedule-popup fontsize_sub_grn_kit">
             <h3 class="mail-to-schedule-popup-header fontsize_sub_grn_kit">2019年09月26日</h3>
