@@ -1,7 +1,8 @@
 const executeWhenMailOpened = callback => {
-  const observer = new MutationObserver(callback);
   const $mail_view = $('#mail_view');
   if ($mail_view.length > 0) {
+    callback();
+    const observer = new MutationObserver(callback);
     observer.observe($mail_view[0], { childList: true });
   }
 };
