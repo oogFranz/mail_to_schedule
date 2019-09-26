@@ -18,7 +18,10 @@
 
         const $popup = $(
           `<div class="mail-to-schedule-popup fontsize_sub_grn_kit">
-            <h3 class="mail-to-schedule-popup-header fontsize_sub_grn_kit">2019年09月26日</h3>
+            <div class="mail-to-schedule-popup-header">
+                <h3 class="mail-to-schedule-popup-header-title fontsize_sub_grn_kit">2019年09月26日</h3>
+                <button class="mail-to-schedule-popup-close-button icon_close_2_mm_grn_kit icon_inline_mm_grn icon_only_mm_grn"/>
+            </div>
                 <section>
                     <div class="mail-to-schedule-popup-row">
                         <span class="mail-to-schedule-popup-row-title">参加者</span>
@@ -118,6 +121,10 @@
             </div>`
         );
         $('.mail-to-schedule').append($popup);
+
+        $('.mail-to-schedule-popup-close-button').on('click', () => {
+          $popup.remove();
+        });
       });
     }
   };

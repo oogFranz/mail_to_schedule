@@ -16,6 +16,26 @@
     position: relative;
 }
 
+.mail-to-schedule-popup-header {
+    position: relative;
+}
+
+.mail-to-schedule-popup-header-title {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.mail-to-schedule-popup-close-button {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    border: none;
+}
+
 .mail-to-schedule-popup-row {
     display: flex;
     align-items: center;
@@ -28,10 +48,4 @@
 
 .mail-to-schedule-popup-row-content {
     flex: 1;
-}
-
-.mail-to-schedule-popup-header {
-    padding: 0;
-    margin: 0;
-    text-align: center;
 }
