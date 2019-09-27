@@ -183,7 +183,7 @@ const getPopupHTML = mail_info => {
           <h3 class="mail-to-schedule-popup-header-title fontsize_sub_grn_kit">
           2019年${padZero(mail_info.month)}月${padZero(mail_info.date)}日
           </h3>
-          <button class="mail-to-schedule-popup-close-button icon_close_2_mm_grn_kit icon_inline_mm_grn icon_only_mm_grn"/>
+          <button class="mail-to-schedule-popup-close-button icon_close_2_mm_grn_kit icon_inline_mm_grn icon_only_mm_grn" title="ポップアップを閉じる"/>
       </div>
           <section>
               <div class="mail-to-schedule-popup-row">

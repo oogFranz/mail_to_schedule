@@ -22,7 +22,8 @@
     font-size: inherit;
 }
 
-.mail-to-schedule-button:hover {
+.mail-to-schedule-button:hover,
+.mail-to-schedule-popup-close-button:hover {
     background-color: inherit;
     border: inherit;
     cursor: pointer;
