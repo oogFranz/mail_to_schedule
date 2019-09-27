@@ -7,20 +7,27 @@ const executeWhenMailOpened = callback => {
   }
 };
 
+const regex_patterns = {
+  japanese: /((?<month>\d+)月(?<date>\d+)日[(（].?[)）]\s*((?<startHour>\d+):(?<startMinute>\d+).(?<endHour>\d+):(?<endMinute>\d+))?)/,
+  en: /((?<month>\d+)\/(?<date>\d+)([(（].?[)）])?\s*((?<startHour>\d+):(?<startMinute>\d+).(?<endHour>\d+):(?<endMinute>\d+))?)/,
+};
+
 const deployScheduleAddButton = () => {
   if ($('.mail-to-schedule-popup').length > 0) {
     $('.mail-to-schedule-popup').remove();
   }
   let $mail_content = $('#mail_view .format_contents');
-  const mail_content_html = $mail_content.html();
-  if (mail_content_html) {
-    const regex = /((\d+)月(\d+)日[(（].?[)）]((\d+):(\d+).(\d+):(\d+))?)/g;
-    $mail_content.html(
-      mail_content_html.replace(
-        regex,
-        '<div class="mail-to-schedule"><button class="mail-to-schedule-button">$1</button></div>'
-      )
-    );
+  if ($mail_content.html()) {
+    for (const [key, pattern] of Object.entries(regex_patterns)) {
+      $mail_content.html(
+        $mail_content
+          .html()
+          .replace(
+            new RegExp(pattern, 'g'),
+            `<div class="mail-to-schedule"><button class="mail-to-schedule-button" data-regex-key="${key}">$1</button></div>`
+          )
+      );
+    }
 
     $('.mail-to-schedule-button').on('click', el => {
       const mail_info = getMailInfo(el.target);
@@ -49,26 +56,31 @@ const openScheduleView = scheduleId => {
 };
 
 const getMailInfo = dateButton => {
-  const dateTimeRegex = /(\d+)月(\d+)日[(（].?[)）]((\d+):(\d+).(\d+):(\d+))?/;
+  const dateTimeRegex = regex_patterns[dateButton.dataset.regexKey];
   const matches = dateButton.innerText.match(dateTimeRegex);
-  const month = matches[1];
-  const date = matches[2];
-  const hasPeriod = matches.length > 4;
-  const startHour = hasPeriod ? matches[4] : '';
-  const startMinute = hasPeriod ? matches[5] : '';
-  const endHour = hasPeriod ? matches[6] : '';
-  const endMinute = hasPeriod ? matches[7] : '';
+  const {
+    month,
+    date,
+    startHour = '',
+    startMinute = '',
+    endHour = '',
+    endMinute = '',
+  } = matches.groups;
   const $mail_content_title = $('.mail_content_title_text_grn');
   const title = $mail_content_title.text().trim();
   return {
-    month,
-    date,
+    month: removeZero(month),
+    date: removeZero(date),
     title,
-    startHour,
-    startMinute,
-    endHour,
-    endMinute,
+    startHour: removeZero(startHour),
+    startMinute: removeZero(startMinute),
+    endHour: removeZero(endHour),
+    endMinute: removeZero(endMinute),
   };
+};
+
+const removeZero = number_string => {
+  return String(Number(number_string));
 };
 
 const openPopup = (dateButton, mail_info) => {
