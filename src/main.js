@@ -33,6 +33,14 @@ const createDateString = (month, date) => {
   return `2019-${padZero(month)}-${padZero(date)}`;
 };
 
+const createTimeString = (hour, minute) => {
+  return `${padZero(hour)}:${padZero(minute)}:00+09:00`;
+};
+
+const createDateTimeString = (month, date, hour, minute) => {
+  return `${createDateString(month, date)}T${createTimeString(hour, minute)}`;
+};
+
 const padZero = number => {
   return String(number).padStart(2, '0');
 };
@@ -95,41 +103,65 @@ const openPopup = (dateButton, mail_info) => {
   });
 
   $('.mail-to-schedule-popup-add-button').on('click', () => {
-    addSchedule(mail_info).then(response => {
+    const popup_info = getPopupInfo(mail_info.month, mail_info.date);
+    addSchedule(popup_info).then(response => {
       closePopup($popup);
       openScheduleView(response.data.id);
     });
   });
 };
+
 const closePopup = $popup => {
   $popup.remove();
 };
 
-const addSchedule = mail_info => {
+const getPopupInfo = (month, date) => {
+  const startHour = $('#mail-to-schedule-popup-schedule-start-hour').val();
+  const startMinute =
+    $('#mail-to-schedule-popup-schedule-start-minute').val() || '0';
+  const endHour = $('#mail-to-schedule-popup-schedule-end-hour').val();
+  const endMinute =
+    $('#mail-to-schedule-popup-schedule-end-minute').val() || '0';
+  const isAllDay = startHour === '';
+  const isStartOnly = !isAllDay && endHour === '';
+  const startDateTime = isAllDay
+    ? createDateTimeString(month, date, '0', '0')
+    : createDateTimeString(month, date, startHour, startMinute);
+  const endDateTime = isStartOnly
+    ? createDateTimeString(month, date, '0', '0')
+    : createDateTimeString(month, date, endHour, endMinute);
+  return {
+    subject: $('#mail-to-schedule-popup-schedule-title').val(),
+    startDateTime,
+    endDateTime,
+    notes: $('#mail-to-schedule-popup-schedule-notes').val(),
+    attendeesId: garoon.base.user.getLoginUser().garoonId,
+    isAllDay,
+    isStartOnly,
+  };
+};
+
+const addSchedule = popup_info => {
   return garoon.api('/api/v1/schedule/events', 'POST', {
     eventType: 'REGULAR',
-    subject: $('#mail-to-schedule-popup-schedule-title').val(),
-    notes: '',
+    subject: popup_info.subject,
+    notes: popup_info.notes,
     attendees: [
       {
-        id: garoon.base.user.getLoginUser().garoonId,
+        id: popup_info.attendeesId,
         type: 'USER',
       },
     ],
     start: {
-      dateTime: `${createDateString(
-        mail_info.month,
-        mail_info.date
-      )}T08:00:00+09:00`,
+      dateTime: popup_info.startDateTime,
       timeZone: 'Asia/Tokyo',
     },
     end: {
-      dateTime: `${createDateString(
-        mail_info.month,
-        mail_info.date
-      )}T18:00:00+09:00`,
+      dateTime: popup_info.endDateTime,
       timeZone: 'Asia/Tokyo',
     },
+    isAllDay: popup_info.isAllDay,
+    isStartOnly: popup_info.isStartOnly,
   });
 };
 
@@ -227,7 +259,7 @@ const getPopupHTML = mail_info => {
               <div class="mail-to-schedule-popup-row">
                   <span class="mail-to-schedule-popup-row-title">メモ</span>
                   <div class="mail-to-schedule-popup-row-content">
-                      <textarea id="mail-to-schedule-popup-schedule-note"></textarea>
+                      <textarea id="mail-to-schedule-popup-schedule-notes"></textarea>
                   </div>
               </div>
               <div class="mail-to-schedule-popup-row">
