@@ -41,16 +41,25 @@ const openScheduleView = scheduleId => {
 };
 
 const getMailInfo = dateButton => {
-  const dateRegex = /(\d+)月(\d+)日/;
-  const matches = dateButton.innerText.match(dateRegex);
+  const dateTimeRegex = /(\d+)月(\d+)日[(（].?[)）]((\d+):(\d+).(\d+):(\d+))?/;
+  const matches = dateButton.innerText.match(dateTimeRegex);
   const month = matches[1];
   const date = matches[2];
+  const hasPeriod = matches.length > 4;
+  const startHour = hasPeriod ? matches[4] : '';
+  const startMinute = hasPeriod ? matches[5] : '';
+  const endHour = hasPeriod ? matches[6] : '';
+  const endMinute = hasPeriod ? matches[7] : '';
   const $mail_content_title = $('.mail_content_title_text_grn');
   const title = $mail_content_title.text().trim();
   return {
     month,
     date,
     title,
+    startHour,
+    startMinute,
+    endHour,
+    endMinute,
   };
 };
 
@@ -65,10 +74,22 @@ const openPopup = (dateButton, mail_info) => {
     top: rect.bottom + 10,
     left: rect.left,
   });
+  $popup.find('#mail-to-schedule-popup-schedule-title').val(mail_info.title);
+  $popup
+    .find('#mail-to-schedule-popup-schedule-start-hour')
+    .val(mail_info.startHour);
+  $popup
+    .find('#mail-to-schedule-popup-schedule-start-minute')
+    .val(mail_info.startMinute);
+  $popup
+    .find('#mail-to-schedule-popup-schedule-end-hour')
+    .val(mail_info.endHour);
+  $popup
+    .find('#mail-to-schedule-popup-schedule-end-minute')
+    .val(mail_info.endMinute);
 
   $(document.body).append($popup);
 
-  $('#mail-to-schedule-popup-schedule-title').val(mail_info.title);
   $('.mail-to-schedule-popup-close-button').on('click', () => {
     closePopup($popup);
   });
@@ -130,7 +151,7 @@ const getPopupHTML = mail_info => {
               <div class="mail-to-schedule-popup-row">
                   <span class="mail-to-schedule-popup-row-title">時刻</span>
                   <div class="mail-to-schedule-popup-row-content">
-                      <select id="start_hour" name="start_hour">
+                      <select id="mail-to-schedule-popup-schedule-start-hour">
                           <option value="">--時</option>
                           <option value="0">0時</option>
                           <option value="1">1時</option>
@@ -140,7 +161,6 @@ const getPopupHTML = mail_info => {
                           <option value="5">5時</option>
                           <option value="6">6時</option>
                           <option value="7">7時</option>
-                          <option value="" selected="">--時</option>
                           <option value="8">8時</option>
                           <option value="9">9時</option>
                           <option value="10">10時</option>
@@ -158,13 +178,13 @@ const getPopupHTML = mail_info => {
                           <option value="22">22時</option>
                           <option value="23">23時</option>
                       </select>
-                      <select id="start_minute" name="start_minute">
+                      <select id="mail-to-schedule-popup-schedule-start-minute">
                           <option value="">--分</option>
                           <option value="0">00分</option>
                           <option value="30">30分</option>
                       </select>
                       ～
-                      <select id="end_hour" name="end_hour">
+                      <select id="mail-to-schedule-popup-schedule-end-hour">
                           <option value="">--時</option>
                           <option value="0">0時</option>
                           <option value="1">1時</option>
@@ -174,7 +194,6 @@ const getPopupHTML = mail_info => {
                           <option value="5">5時</option>
                           <option value="6">6時</option>
                           <option value="7">7時</option>
-                          <option value="" selected="">--時</option>
                           <option value="8">8時</option>
                           <option value="9">9時</option>
                           <option value="10">10時</option>
@@ -192,7 +211,7 @@ const getPopupHTML = mail_info => {
                           <option value="22">22時</option>
                           <option value="23">23時</option>
                       </select>
-                      <select id="end_minute" name="end_minute">
+                      <select id="mail-to-schedule-popup-schedule-end-minute">
                           <option value="">--分</option>
                           <option value="0">00分</option>
                           <option value="30">30分</option>
