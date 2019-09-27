@@ -97,7 +97,7 @@ const openPopup = (dateButton, mail_info) => {
     .val(mail_info.endMinute);
 
   $(document.body).append($popup);
-
+  $popup.draggable();
   $('.mail-to-schedule-popup-close-button').on('click', () => {
     closePopup($popup);
   });
