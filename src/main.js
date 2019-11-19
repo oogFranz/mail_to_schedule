@@ -4,18 +4,18 @@
    * @param {callback} callback
    */
   const executeWhenMailOpened = callback => {
-    const $mail_view = $('#mail_view');
-    if ($mail_view.length > 0) {
+    const $mailView = $('#mail_view');
+    if ($mailView.length > 0) {
       callback();
       const observer = new MutationObserver(callback);
-      observer.observe($mail_view[0], { childList: true });
+      observer.observe($mailView[0], { childList: true });
     }
   };
 
   /**
    * 抽出する日付の正規表現のObject
    */
-  const regex_patterns = {
+  const regexPatterns = {
     japanese: /((?<month>\d+)月(?<date>\d+)日[(（].?[)）]\s*((?<startHour>\d+):(?<startMinute>\d+).(?<endHour>\d+):(?<endMinute>\d+))?)/,
     en: /((?<month>\d+)\/(?<date>\d+)([(（].?[)）])?\s*((?<startHour>\d+):(?<startMinute>\d+).(?<endHour>\d+):(?<endMinute>\d+))?)/,
   };
@@ -27,11 +27,11 @@
     if ($('.mail-to-schedule-popup').length > 0) {
       $('.mail-to-schedule-popup').remove();
     }
-    let $mail_content = $('#mail_view .format_contents');
-    if ($mail_content.html()) {
-      for (const [key, pattern] of Object.entries(regex_patterns)) {
-        $mail_content.html(
-          $mail_content
+    let $mailContent = $('#mail_view .format_contents');
+    if ($mailContent.html()) {
+      for (const [key, pattern] of Object.entries(regexPatterns)) {
+        $mailContent.html(
+          $mailContent
             .html()
             .replace(
               new RegExp(pattern, 'g'),
@@ -41,8 +41,8 @@
       }
 
       $('.mail-to-schedule-button').on('click', el => {
-        const mail_info = getMailInfo(el.target);
-        openPopup(el.target, mail_info);
+        const mailInfo = getMailInfo(el.target);
+        openPopup(el.target, mailInfo);
       });
     }
   };
@@ -101,7 +101,7 @@
    * @returns {Object}
    */
   const getMailInfo = dateButton => {
-    const dateTimeRegex = regex_patterns[dateButton.dataset.regexKey];
+    const dateTimeRegex = regexPatterns[dateButton.dataset.regexKey];
     const matches = dateButton.innerText.match(dateTimeRegex);
     const {
       month,
@@ -111,8 +111,8 @@
       endHour = '',
       endMinute = '',
     } = matches.groups;
-    const $mail_content_title = $('.mail_content_title_text_grn');
-    const title = $mail_content_title.text().trim();
+    const $mailContentTitle = $('.mail_content_title_text_grn');
+    const title = $mailContentTitle.text().trim();
     return {
       month: removeZero(month),
       date: removeZero(date),
@@ -126,42 +126,42 @@
 
   /**
    * 数値文字列から先頭の0を除く
-   * @param {number} number_string
+   * @param {number} numberString
    * @returns {string}
    */
-  const removeZero = number_string => {
-    return String(Number(number_string));
+  const removeZero = numberString => {
+    return String(Number(numberString));
   };
 
   /**
    * 予定登録ポップアップを開く
    * @param {Element} dateButton
-   * @param {Object} mail_info
+   * @param {Object} mailInfo
    */
-  const openPopup = (dateButton, mail_info) => {
+  const openPopup = (dateButton, mailInfo) => {
     if ($('.mail-to-schedule-popup').length > 0) {
       $('.mail-to-schedule-popup').remove();
     }
 
-    const $popup = $(getPopupHTML(mail_info));
+    const $popup = $(getPopupHTML(mailInfo));
     const rect = dateButton.getBoundingClientRect();
     $popup.css({
       top: rect.bottom + 10,
       left: rect.left,
     });
-    $popup.find('#mail-to-schedule-popup-schedule-title').val(mail_info.title);
+    $popup.find('#mail-to-schedule-popup-schedule-title').val(mailInfo.title);
     $popup
       .find('#mail-to-schedule-popup-schedule-start-hour')
-      .val(mail_info.startHour);
+      .val(mailInfo.startHour);
     $popup
       .find('#mail-to-schedule-popup-schedule-start-minute')
-      .val(mail_info.startMinute);
+      .val(mailInfo.startMinute);
     $popup
       .find('#mail-to-schedule-popup-schedule-end-hour')
-      .val(mail_info.endHour);
+      .val(mailInfo.endHour);
     $popup
       .find('#mail-to-schedule-popup-schedule-end-minute')
-      .val(mail_info.endMinute);
+      .val(mailInfo.endMinute);
 
     $(document.body).append($popup);
     $popup.draggable();
@@ -170,8 +170,8 @@
     });
 
     $('.mail-to-schedule-popup-add-button').on('click', () => {
-      const popup_info = getPopupInfo(mail_info.month, mail_info.date);
-      addSchedule(popup_info).then(response => {
+      const popupInfo = getPopupInfo(mailInfo.month, mailInfo.date);
+      addSchedule(popupInfo).then(response => {
         closePopup($popup);
         openScheduleView(response.data.id);
       });
@@ -214,29 +214,29 @@
 
   /**
    * 予定を登録する
-   * @param {Object} popup_info
+   * @param {Object} popupInfo
    */
-  const addSchedule = popup_info => {
+  const addSchedule = popupInfo => {
     return garoon.api('/api/v1/schedule/events', 'POST', {
       eventType: 'REGULAR',
-      subject: popup_info.subject,
-      notes: popup_info.notes,
+      subject: popupInfo.subject,
+      notes: popupInfo.notes,
       attendees: [
         {
-          id: popup_info.attendeesId,
+          id: popupInfo.attendeesId,
           type: 'USER',
         },
       ],
       start: {
-        dateTime: popup_info.startDateTime,
+        dateTime: popupInfo.startDateTime,
         timeZone: 'Asia/Tokyo',
       },
       end: {
-        dateTime: popup_info.endDateTime,
+        dateTime: popupInfo.endDateTime,
         timeZone: 'Asia/Tokyo',
       },
-      isAllDay: popup_info.isAllDay,
-      isStartOnly: popup_info.isStartOnly,
+      isAllDay: popupInfo.isAllDay,
+      isStartOnly: popupInfo.isStartOnly,
     });
   };
 
@@ -262,14 +262,14 @@
 
   /**
    * 予定登録ポップアップのHTMLを生成する
-   * @param {Object} mail_info
+   * @param {Object} mailInfo
    */
-  const getPopupHTML = mail_info => {
+  const getPopupHTML = mailInfo => {
     return `<div class="mail-to-schedule-popup fontsize_sub_grn_kit">
       <div class="mail-to-schedule-popup-header">
           <h3 class="mail-to-schedule-popup-header-title fontsize_sub_grn_kit">
-          2019年${htmlEscape(padZero(mail_info.month))}月${htmlEscape(
-      padZero(mail_info.date)
+          2019年${htmlEscape(padZero(mailInfo.month))}月${htmlEscape(
+      padZero(mailInfo.date)
     )}日
           </h3>
           <button class="mail-to-schedule-popup-close-button icon_close_2_mm_grn_kit icon_inline_mm_grn icon_only_mm_grn" title="ポップアップを閉じる"/>
