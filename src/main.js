@@ -1,4 +1,4 @@
-(function() {
+(function($) {
   /**
    * メールの3ペイン画面が開いているときにのみ動作させる
    * @param {callback} callback
@@ -384,4 +384,4 @@
   };
 
   executeWhenMailOpened(deployScheduleAddButton);
-})();
+})(jQuery.noConflict(true));
