@@ -241,6 +241,26 @@
   };
 
   /**
+   *
+   * @param {string} str
+   * @returns {string}
+   */
+  const htmlEscape = str => {
+    if (!str) return;
+    return str.replace(/[<>&"'`]/g, match => {
+      const escape = {
+        '<': '&lt;',
+        '>': '&gt;',
+        '&': '&amp;',
+        '"': '&quot;',
+        "'": '&#39;',
+        '`': '&#x60;',
+      };
+      return escape[match];
+    });
+  };
+
+  /**
    * 予定登録ポップアップのHTMLを生成する
    * @param {Object} mail_info
    */
@@ -248,16 +268,18 @@
     return `<div class="mail-to-schedule-popup fontsize_sub_grn_kit">
       <div class="mail-to-schedule-popup-header">
           <h3 class="mail-to-schedule-popup-header-title fontsize_sub_grn_kit">
-          2019年${padZero(mail_info.month)}月${padZero(mail_info.date)}日
+          2019年${htmlEscape(padZero(mail_info.month))}月${htmlEscape(
+      padZero(mail_info.date)
+    )}日
           </h3>
           <button class="mail-to-schedule-popup-close-button icon_close_2_mm_grn_kit icon_inline_mm_grn icon_only_mm_grn" title="ポップアップを閉じる"/>
       </div>
           <section>
               <div class="mail-to-schedule-popup-row">
                   <span class="mail-to-schedule-popup-row-title">参加者</span>
-                  <span class="mail-to-schedule-popup-row-content">${
+                  <span class="mail-to-schedule-popup-row-content">${htmlEscape(
                     garoon.base.user.getLoginUser().name
-                  }</span>
+                  )}</span>
               </div>
               <div class="mail-to-schedule-popup-row">
                   <span class="mail-to-schedule-popup-row-title">時刻</span>
