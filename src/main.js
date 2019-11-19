@@ -186,6 +186,11 @@
     $popup.remove();
   };
 
+  /**
+   * 予定登録ポップアップに入力された内容を取得する
+   * @param {number} month
+   * @param {number} date
+   */
   const getPopupInfo = (month, date) => {
     const startHour = $('#mail-to-schedule-popup-schedule-start-hour').val();
     const startMinute =
