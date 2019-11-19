@@ -16,8 +16,8 @@
    * 抽出する日付の正規表現のObject
    */
   const regexPatterns = {
-    japanese: /((?<month>\d+)月(?<date>\d+)日[(（].?[)）]\s*((?<startHour>\d+):(?<startMinute>\d+).(?<endHour>\d+):(?<endMinute>\d+))?)/,
-    en: /((?<month>\d+)\/(?<date>\d+)([(（].?[)）])?\s*((?<startHour>\d+):(?<startMinute>\d+).(?<endHour>\d+):(?<endMinute>\d+))?)/,
+    japanese: /((?<month>\d+)月(?<date>\d+)日([(（].?[)）])?\s*((?<startHour>\d+)(:(?<startMinute>\d+)|時)(.(?<endHour>\d+)(:(?<endMinute>\d+)|時))?)?)/,
+    en: /((?<month>\d+)\/(?<date>\d+)([(（].?[)）])?\s*((?<startHour>\d+)(:(?<startMinute>\d+)|時)(.(?<endHour>\d+)(:(?<endMinute>\d+)|時))?)?)/,
   };
 
   /**
@@ -103,7 +103,7 @@
   const getMailInfo = dateButton => {
     const dateTimeRegex = regexPatterns[dateButton.dataset.regexKey];
     const matches = dateButton.innerText.match(dateTimeRegex);
-    const {
+    let {
       month,
       date,
       startHour = '',
@@ -111,6 +111,10 @@
       endHour = '',
       endMinute = '',
     } = matches.groups;
+
+    if (endHour === '' && startHour !== '') {
+      endHour = String(Number(startHour) + 1);
+    }
     const $mailContentTitle = $('.mail_content_title_text_grn');
     const title = $mailContentTitle.text().trim();
     return {
