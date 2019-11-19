@@ -1,4 +1,8 @@
 (function() {
+  /**
+   * メールの3ペイン画面が開いているときにのみ動作させる
+   * @param {callback} callback
+   */
   const executeWhenMailOpened = callback => {
     const $mail_view = $('#mail_view');
     if ($mail_view.length > 0) {
@@ -8,11 +12,17 @@
     }
   };
 
+  /**
+   * 抽出する日付の正規表現のObject
+   */
   const regex_patterns = {
     japanese: /((?<month>\d+)月(?<date>\d+)日[(（].?[)）]\s*((?<startHour>\d+):(?<startMinute>\d+).(?<endHour>\d+):(?<endMinute>\d+))?)/,
     en: /((?<month>\d+)\/(?<date>\d+)([(（].?[)）])?\s*((?<startHour>\d+):(?<startMinute>\d+).(?<endHour>\d+):(?<endMinute>\d+))?)/,
   };
 
+  /**
+   * 日付をScheduleAddButtonに変更する
+   */
   const deployScheduleAddButton = () => {
     if ($('.mail-to-schedule-popup').length > 0) {
       $('.mail-to-schedule-popup').remove();
@@ -37,25 +47,59 @@
     }
   };
 
+  /**
+   * ゼロ詰日付文字列を生成する
+   * @param {number} month
+   * @param {number} date
+   * @returns {string} e.g. 2019-11-03
+   */
   const createDateString = (month, date) => {
     return `2019-${padZero(month)}-${padZero(date)}`;
   };
 
+  /**
+   * ゼロ詰時刻文字列を生成する
+   * @param {number} hour
+   * @param {number} minute
+   * @returns {string} e.g. 09:30:00+09:00
+   */
   const createTimeString = (hour, minute) => {
     return `${padZero(hour)}:${padZero(minute)}:00+09:00`;
   };
 
+  /**
+   * ゼロ詰日時文字列を生成する
+   * @param {number} month
+   * @param {number} date
+   * @param {number} hour
+   * @param {number} minute
+   * @returns {string} e.g. 2019-11-03T09:30:00+09:00
+   */
   const createDateTimeString = (month, date, hour, minute) => {
     return `${createDateString(month, date)}T${createTimeString(hour, minute)}`;
   };
 
+  /**
+   * 2桁ゼロ詰文字列を返す
+   * @param {number} number
+   * @returns {string}
+   */
   const padZero = number => {
     return String(number).padStart(2, '0');
   };
+
+  /**
+   * 登録したスケジュール詳細画面を別タブで開く
+   * @param {string} scheduleId
+   */
   const openScheduleView = scheduleId => {
     window.open(`/g/schedule/view.csp?event=${scheduleId}`, '_blank');
   };
 
+  /**
+   * メール本文から、タイトル、日時情報を抽出する
+   * @returns {Object}
+   */
   const getMailInfo = dateButton => {
     const dateTimeRegex = regex_patterns[dateButton.dataset.regexKey];
     const matches = dateButton.innerText.match(dateTimeRegex);
@@ -80,10 +124,20 @@
     };
   };
 
+  /**
+   * 数値文字列から先頭の0を除く
+   * @param {number} number_string
+   * @returns {string}
+   */
   const removeZero = number_string => {
     return String(Number(number_string));
   };
 
+  /**
+   * 予定登録ポップアップを開く
+   * @param {Element} dateButton
+   * @param {Object} mail_info
+   */
   const openPopup = (dateButton, mail_info) => {
     if ($('.mail-to-schedule-popup').length > 0) {
       $('.mail-to-schedule-popup').remove();
@@ -124,6 +178,10 @@
     });
   };
 
+  /**
+   * 予定登録ポップアップを閉じる
+   * @param {jQuery} $popup
+   */
   const closePopup = $popup => {
     $popup.remove();
   };
@@ -154,6 +212,10 @@
     };
   };
 
+  /**
+   * 予定を登録する
+   * @param {Object} popup_info
+   */
   const addSchedule = popup_info => {
     return garoon.api('/api/v1/schedule/events', 'POST', {
       eventType: 'REGULAR',
@@ -178,6 +240,10 @@
     });
   };
 
+  /**
+   * 予定登録ポップアップのHTMLを生成する
+   * @param {Object} mail_info
+   */
   const getPopupHTML = mail_info => {
     return `<div class="mail-to-schedule-popup fontsize_sub_grn_kit">
       <div class="mail-to-schedule-popup-header">
