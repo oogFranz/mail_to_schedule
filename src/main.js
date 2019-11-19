@@ -171,10 +171,15 @@
 
     $('.mail-to-schedule-popup-add-button').on('click', () => {
       const popupInfo = getPopupInfo(mailInfo.month, mailInfo.date);
-      addSchedule(popupInfo).then(response => {
-        closePopup($popup);
-        openScheduleView(response.data.id);
-      });
+      addSchedule(popupInfo)
+        .then(response => {
+          closePopup($popup);
+          openScheduleView(response.data.id);
+        })
+        .catch(() => {
+          alert('予定登録に失敗しました');
+          //レアケースなのでラフな実装で
+        });
     });
   };
 
